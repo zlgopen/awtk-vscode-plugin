@@ -64,8 +64,11 @@ function clientUpdateUI(escapedXml, app_root, width, height, language, country, 
 
   try {
     const parser = new DOMParser();
-    const xmlDoc = parser.parseFromString(xml, "text/xml");
-    reqJson.xml = xmlDoc.documentElement.outerHTML;
+    let preprocessXml = xml.replace(/v-on:/g, "v-on-");
+    preprocessXml = preprocessXml.replace(/v-data:/g, "v-data-");
+    preprocessXml = preprocessXml.replace(/style:/g, "style.");
+
+    const xmlDoc = parser.parseFromString(preprocessXml, "text/xml");
 
     if (reqJson.xml.indexOf('parsererror') > 0) {
       console.log("invalid ui xml:", reqJson.xml);
@@ -76,6 +79,7 @@ function clientUpdateUI(escapedXml, app_root, width, height, language, country, 
 
       return;
     }
+    reqJson.xml = xml;
   } catch (e) {
     console.log("invalid ui xml", e);
     return;
