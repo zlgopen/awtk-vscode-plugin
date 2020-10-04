@@ -1,12 +1,12 @@
-# awtk plugin
+# awtk vscode plugin
 
 ## 1. 介绍
 
-### 1.1 UI 预览插件
+### 1.1 AWTK XML UI 预览插件
 
 ![demo](demo.png)
 
-可以在 vscode 中实时预览 AWTK UI XML 文件。主要特色：
+AWTK XML UI 预览插件: 在 vscode 中实时预览 AWTK XML UI 文件。主要特色：
 
 * 真实的 UI 效果。
 * 可以设置主题，方便查看在不同主题下界面的效果。
@@ -16,10 +16,13 @@
 已知问题：
 
 * 主题切换暂未实现。
+* 暂不支持自定义控件。
 * 不支持 include 指令。
 * 目前大概3秒更新一次(后续再优化)。
 
 ### 1.2 自动补全插件
+
+智能提示控件的名称、属性和属性的取值。
 
 (TODO)
 
