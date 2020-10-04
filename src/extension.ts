@@ -70,17 +70,15 @@ class UIPreviewPanel {
 			UIPreviewPanel.currentPanel._panel.reveal(column);
 			UIPreviewPanel.currentPanel.update();
 			return;
+		} else {
+			const panel = vscode.window.createWebviewPanel(
+				UIPreviewPanel.viewType, 'AWTK UI Previewer', column,
+				{
+					enableScripts: true,
+				}
+			);
+			UIPreviewPanel.currentPanel = new UIPreviewPanel(panel, extensionUri);
 		}
-
-		// Otherwise, create a new panel.
-		const panel = vscode.window.createWebviewPanel(
-			UIPreviewPanel.viewType, 'AWTK UI Previewer',column,
-			{
-				enableScripts: true,
-			}
-		);
-
-		UIPreviewPanel.currentPanel = new UIPreviewPanel(panel, extensionUri);
 	}
 
 	private constructor(panel: vscode.WebviewPanel, extensionUri: vscode.Uri) {

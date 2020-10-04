@@ -22,7 +22,7 @@
 		"commands": [
 			{
 				"command": "awtk.preview",
-				"title": "preview awtk ui xml",
+				"title": "Preview UI XML",
 				"category": "AWTK"
 			}
 		]
