@@ -2,146 +2,26 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.activate = void 0;
 const vscode = require("vscode");
-function basename(path) {
-    return path.substring(path.lastIndexOf('/') + 1);
-}
-function getAppRoot(fspath) {
-    let appRoot = fspath.substring(0, fspath.lastIndexOf("/design"));
-    if (appRoot.indexOf(':/') > 0 && appRoot[0] == '/') {
-        appRoot = appRoot.substring(1);
-    }
-    return appRoot + "/res";
-}
-function isAwtkUiFile(editor) {
-    if (!editor) {
-        vscode.window.showErrorMessage("Please open an AWTK UI XML file first.");
-        return false;
-    }
-    let uri = editor.document.uri;
-    let filename = uri.path;
-    if (filename.indexOf('/ui/') > 0 && filename.endsWith('.xml')) {
-        return true;
-    }
-    else {
-        vscode.window.showErrorMessage("May be it is not an AWTK UI XML file.");
-        return false;
-    }
-}
+const preview_1 = require("./preview");
+const completion_1 = require("./completion");
 function activate(context) {
+    context.subscriptions.push(vscode.languages.registerCompletionItemProvider('plaintext', completion_1.awtkCompletionProvider, '<'));
+    context.subscriptions.push(vscode.languages.registerCompletionItemProvider('plaintext', completion_1.awtkCompletionProvider, '='));
     context.subscriptions.push(vscode.workspace.onDidChangeTextDocument(e => {
         let uri = e.document.uri.toString();
-        if (UIPreviewPanel.currentPanel) {
+        if (preview_1.UIPreviewPanel.currentPanel) {
             const doc = e.document;
             let source = doc.getText();
-            if (UIPreviewPanel.currentPanel.uri == uri) {
-                UIPreviewPanel.currentPanel.updateSource(source);
+            if (preview_1.UIPreviewPanel.currentPanel.uri == uri) {
+                preview_1.UIPreviewPanel.currentPanel.updateSource(source);
             }
         }
     }));
     context.subscriptions.push(vscode.commands.registerCommand('awtk.preview', () => {
-        if (isAwtkUiFile(vscode.window.activeTextEditor)) {
-            UIPreviewPanel.createOrShow(context.extensionUri);
+        if (preview_1.isAwtkUiFile(vscode.window.activeTextEditor)) {
+            preview_1.UIPreviewPanel.createOrShow(context.extensionUri);
         }
     }));
 }
 exports.activate = activate;
-class UIPreviewPanel {
-    constructor(panel, extensionUri) {
-        this._disposables = [];
-        this.uri = '';
-        this._panel = panel;
-        this._extensionUri = extensionUri;
-        this._update();
-        this._panel.onDidDispose(() => this.dispose(), null, this._disposables);
-    }
-    static createOrShow(extensionUri) {
-        const column = vscode.ViewColumn.Two;
-        if (UIPreviewPanel.currentPanel) {
-            UIPreviewPanel.currentPanel._panel.reveal(column);
-            UIPreviewPanel.currentPanel.update();
-            return;
-        }
-        else {
-            const panel = vscode.window.createWebviewPanel(UIPreviewPanel.viewType, 'AWTK UI Previewer', column, {
-                enableScripts: true,
-            });
-            UIPreviewPanel.currentPanel = new UIPreviewPanel(panel, extensionUri);
-        }
-    }
-    dispose() {
-        UIPreviewPanel.currentPanel = undefined;
-        // Clean up our resources
-        this._panel.dispose();
-        while (this._disposables.length) {
-            const x = this._disposables.pop();
-            if (x) {
-                x.dispose();
-            }
-        }
-    }
-    updateAppRoot(app_root) {
-        this._panel.webview.postMessage({ type: 'updateAppRoot', app_root: app_root });
-    }
-    updateSource(source) {
-        this._panel.webview.postMessage({ type: 'updateSource', source: source });
-    }
-    update() {
-        this._update();
-    }
-    _update() {
-        const webview = this._panel.webview;
-        let editor = vscode.window.activeTextEditor;
-        if (editor != null && isAwtkUiFile(vscode.window.activeTextEditor)) {
-            let uri = editor.document.uri;
-            let appRoot = getAppRoot(uri.path);
-            this.uri = uri.toString();
-            vscode.workspace.openTextDocument(uri).then(doc => {
-                let sourceCode = doc.getText();
-                switch (this._panel.viewColumn) {
-                    case vscode.ViewColumn.One:
-                    default:
-                        this._panel.title = 'Preview ' + basename(uri.path);
-                        this._panel.webview.html = this._getHtmlForWebview(webview, sourceCode, appRoot);
-                }
-            });
-        }
-    }
-    _getHtmlForWebview(webview, source, appRoot) {
-        const scriptPathOnDisk = vscode.Uri.joinPath(this._extensionUri, 'media', 'main.js');
-        const scriptUri = webview.asWebviewUri(scriptPathOnDisk);
-        const escapeSource = escape(source);
-        const nonce = getNonce();
-        return `<!DOCTYPE html>
-			<html lang="en">
-			<head>
-				<meta charset="UTF-8">
-				<meta name="viewport" content="width=device-width, initial-scale=1.0">
-				<title>UI Preview</title>
-			  <script nonce="${nonce}" src="${scriptUri}"></script>
-			</head>
-			<body>
-			<image id="screenshot"/>
-			<table style="width: 100%;">
-				<tr><td>Width:</td><td><input type="text" id="width" value="320"></td></tr>
-				<tr><td>Height:</td><td><input type="text" id="height" value="480"></td></tr>
-				<tr><td>Language:</td><td><input type="text" id="language" value="en"></td></tr>
-				<tr><td>Country:</td><td><input type="text" id="country" value="US"></td></tr>
-				<tr><td>Theme:</td><td><input type="text" id="theme" value="default"></td></tr
-				<tr><td>App Root:</td><td><input type="text" id="app_root" value="${appRoot}"></td></tr>
-			</table>
-      <input id="source" type="hidden" value="${escape(source)}" >
-      <input id="apply" type="submit" value="Apply">
-			</body>
-			</html>`;
-    }
-}
-UIPreviewPanel.viewType = 'uiPreivew';
-function getNonce() {
-    let text = '';
-    const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    for (let i = 0; i < 32; i++) {
-        text += possible.charAt(Math.floor(Math.random() * possible.length));
-    }
-    return text;
-}
 //# sourceMappingURL=extension.js.map
