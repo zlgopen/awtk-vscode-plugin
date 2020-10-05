@@ -241,7 +241,7 @@ ret_t ui_preview_start(int port) {
 
 对于实时预览，比较麻烦的问题是：当前的 XML 可能是无效的，无效体现在两个方面：
 
-* XML 本身不是 welform 的。这个我们可以通过 DOMParser 进行解析，如果失败，并不更新 XML。
+* XML 本身不是 Well Formed 的。这个我们可以通过 DOMParser 进行解析，如果失败，并不更新 XML。
 
 ```js
     const parser = new DOMParser();
@@ -259,7 +259,7 @@ ret_t ui_preview_start(int port) {
     }
 ```
 
-* XML 是 welform 的，但是某些值是无效的。比如：
+* XML 是 Well Formed 的，但是某些值是无效的。比如：
 
 比如输入 label 时，刚输人 l，这并不是一个有效的控件名称，它会触发 AWTK 的 assert，让 preview 服务奔溃。
 
