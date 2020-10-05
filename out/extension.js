@@ -5,8 +5,10 @@ const vscode = require("vscode");
 const preview_1 = require("./preview");
 const completion_1 = require("./completion");
 function activate(context) {
-    context.subscriptions.push(vscode.languages.registerCompletionItemProvider('plaintext', completion_1.awtkCompletionProvider, '<'));
-    context.subscriptions.push(vscode.languages.registerCompletionItemProvider('plaintext', completion_1.awtkCompletionProvider, '='));
+    context.subscriptions.push(vscode.languages.registerCompletionItemProvider('xml', completion_1.widgetTagsCompletionProvider, '<'));
+    context.subscriptions.push(vscode.languages.registerCompletionItemProvider('xml', completion_1.widgetPropsCompletionProvider, ' '));
+    context.subscriptions.push(vscode.languages.registerCompletionItemProvider('xml', completion_1.widgetPropValuesCompletionProvider, '"'));
+    context.subscriptions.push(vscode.languages.registerCompletionItemProvider('xml', completion_1.widgetPropValuesCompletionProvider, "'"));
     context.subscriptions.push(vscode.workspace.onDidChangeTextDocument(e => {
         let uri = e.document.uri.toString();
         if (preview_1.UIPreviewPanel.currentPanel) {

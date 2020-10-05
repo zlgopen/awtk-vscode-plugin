@@ -6,7 +6,7 @@
 
 ![demo](demo.png)
 
-AWTK XML UI 预览插件: 在 vscode 中实时预览 AWTK XML UI 文件。主要特色：
+AWTK XML UI 预览插件：在 vscode 中实时预览 AWTK XML UI 文件。主要特色：
 
 * 真实的 UI 效果。
 * 可以设置主题，方便查看在不同主题下界面的效果。
@@ -18,13 +18,21 @@ AWTK XML UI 预览插件: 在 vscode 中实时预览 AWTK XML UI 文件。主要
 * 主题切换暂未实现。
 * 暂不支持自定义控件。
 * 不支持 include 指令。
-* 目前大概3秒更新一次(后续再优化)。
+* 目前大概 3 秒更新一次（后续再优化）。
 
 ### 1.2 自动补全插件
 
-智能提示控件的名称、属性和属性的取值。
+智能提示控件的名称、属性和属性的取值。主要特色：
 
-(TODO)
+* 输入'<'时自动提示控件的 tag 名。
+
+ ![](docs/images/widget_completion.png)
+
+* 输入空格时提示改控件的属性名。
+
+![](docs/images/prop_name_completion.png)
+
+* 输入引号时提示改控件的取值 (TODO)。
 
 ## 2. 运行
 

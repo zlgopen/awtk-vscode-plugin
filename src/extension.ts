@@ -1,10 +1,12 @@
 import * as vscode from 'vscode';
 import {UIPreviewPanel, isAwtkUiFile} from './preview'
-import {awtkCompletionProvider} from './completion';
+import {widgetTagsCompletionProvider, widgetPropsCompletionProvider, widgetPropValuesCompletionProvider} from './completion';
 
 export function activate(context: vscode.ExtensionContext) {
-	context.subscriptions.push(vscode.languages.registerCompletionItemProvider('plaintext', awtkCompletionProvider, '<'));
-	context.subscriptions.push(vscode.languages.registerCompletionItemProvider('plaintext', awtkCompletionProvider, '='));
+	context.subscriptions.push(vscode.languages.registerCompletionItemProvider('xml', widgetTagsCompletionProvider, '<'));
+	context.subscriptions.push(vscode.languages.registerCompletionItemProvider('xml', widgetPropsCompletionProvider, ' '));
+	context.subscriptions.push(vscode.languages.registerCompletionItemProvider('xml', widgetPropValuesCompletionProvider, '"'));
+	context.subscriptions.push(vscode.languages.registerCompletionItemProvider('xml', widgetPropValuesCompletionProvider, "'"));
 
 	context.subscriptions.push(vscode.workspace.onDidChangeTextDocument(e => {
 		let uri = e.document.uri.toString();
