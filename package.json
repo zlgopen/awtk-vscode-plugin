@@ -11,7 +11,7 @@
 	],
 	"activationEvents": [
 		"onCommand:awtk.preview",
-		"onWebviewPanel:uiPreivew"
+		"onCommand:awtk.completion"
 	],
 	"repository": {
 		"type": "git",
@@ -23,6 +23,11 @@
 			{
 				"command": "awtk.preview",
 				"title": "Preview UI XML",
+				"category": "AWTK"
+			},
+			{
+				"command": "awtk.completion",
+				"title": "Enable AWTK UI Completion",
 				"category": "AWTK"
 			}
 		]

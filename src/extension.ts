@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
-import {UIPreviewPanel, isAwtkUiFile} from './preview'
-import {widgetTagsCompletionProvider, widgetPropsCompletionProvider, widgetPropValuesCompletionProvider} from './completion';
+import { UIPreviewPanel, isAwtkUiFile } from './preview'
+import { widgetTagsCompletionProvider, widgetPropsCompletionProvider, widgetPropValuesCompletionProvider } from './completion';
 
 export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(vscode.languages.registerCompletionItemProvider('xml', widgetTagsCompletionProvider, '<'));

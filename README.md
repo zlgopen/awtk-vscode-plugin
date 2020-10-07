@@ -33,6 +33,8 @@ AWTK XML UI 预览插件：在 vscode 中实时预览 AWTK XML UI 文件。主�
 ![](docs/images/prop_name_completion.png)
 
 * 输入引号时提示改控件的取值 (TODO)。
+ 
+ ![](docs/images/prop_value_completion.png)
 
 ## 2. 运行
 

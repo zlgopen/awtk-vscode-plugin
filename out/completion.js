@@ -2,16 +2,28 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.widgetPropValuesCompletionProvider = exports.widgetPropsCompletionProvider = exports.widgetTagsCompletionProvider = void 0;
 const vscode = require("vscode");
-const awtk = require("./awtk.json");
+const awtkUI = require("./awtk_ui.json");
+const awtkStyle = require("./awtk_style.json");
 function getWidgetInfo(name) {
-    return awtk.widgets.find((iter) => {
+    return awtkUI.widgets.find((iter) => {
         return iter.name === name;
     });
 }
 function getPropInfo(widgetInfo, name) {
-    return widgetInfo.props.find((iter) => {
+    let propInfo = widgetInfo.props.find((iter) => {
         return iter.name === name;
     });
+    if (!propInfo) {
+        widgetInfo = getWidgetInfo('widget');
+        propInfo = widgetInfo.props.find((iter) => {
+            return iter.name === name;
+        });
+    }
+    return propInfo;
+}
+function isAwtkStyleFile(doc) {
+    const filename = doc.uri.path;
+    return filename.indexOf('/styles/') > 0 && filename.endsWith('.xml');
 }
 function isAwtkUiFile(doc) {
     const filename = doc.uri.path;
@@ -43,6 +55,7 @@ const STAT_IN_PRE_PROP_NAME = 4;
 const STAT_IN_PROP_NAME = 5;
 const STAT_IN_PRE_PROP_VALUE = 6;
 const STAT_IN_PROP_VALUE = 7;
+const STAT_END = 8;
 function parseTag(tagText) {
     let result = {
         name: '',
@@ -90,7 +103,10 @@ function parseTag(tagText) {
                 break;
             }
             case STAT_IN_PRE_PROP_NAME: {
-                if (isStartID(c)) {
+                if (c === '/') {
+                    state = STAT_END;
+                }
+                else if (isStartID(c)) {
                     state = STAT_IN_PROP_NAME;
                     propName = c;
                 }
@@ -125,6 +141,10 @@ function parseTag(tagText) {
                 }
                 break;
             }
+            case STAT_END: {
+                result.isEndTag = true;
+                break;
+            }
         }
     }
     result.state = state;
@@ -133,21 +153,27 @@ function parseTag(tagText) {
 function getTagInfo(doc, position) {
     return parseTag(getTagText(doc, position));
 }
+function completionsFromArray(arr) {
+    return arr.map((iter) => {
+        let item = new vscode.CompletionItem(iter.name, vscode.CompletionItemKind.Keyword);
+        item.detail = iter.desc;
+        item.documentation = iter.desc;
+        ;
+        return item;
+    });
+}
 exports.widgetTagsCompletionProvider = {
     provideCompletionItems(document, position) {
         let result = [];
-        if (!isAwtkUiFile(document)) {
+        if (!isAwtkUiFile(document) && !isAwtkStyleFile(document)) {
             return result;
         }
         const tagInfo = getTagInfo(document, position);
-        if (tagInfo.state === STAT_IN_PRE_TAG_NAME || tagInfo.lastPropName) {
-            result = awtk.widgets.map((iter) => {
-                let item = new vscode.CompletionItem(iter.name, vscode.CompletionItemKind.Keyword);
-                item.detail = iter.desc;
-                item.documentation = iter.desc;
-                ;
-                return item;
-            });
+        if (tagInfo.state === STAT_IN_PRE_TAG_NAME) {
+            result = result.concat(completionsFromArray(awtkUI.widgets));
+            if (isAwtkStyleFile(document)) {
+                result = result.concat(completionsFromArray(awtkStyle.widgetStates));
+            }
         }
         return result;
     }
@@ -155,31 +181,32 @@ exports.widgetTagsCompletionProvider = {
 exports.widgetPropsCompletionProvider = {
     provideCompletionItems(document, position) {
         let result = [];
-        if (!isAwtkUiFile(document)) {
+        if (!isAwtkUiFile(document) && !isAwtkStyleFile(document)) {
             return result;
         }
         const tagInfo = getTagInfo(document, position);
-        let widgetInfo = getWidgetInfo('widget');
-        if (tagInfo.state !== STAT_IN_PRE_PROP_NAME) {
-            return result;
+        if (isAwtkUiFile(document)) {
+            if (tagInfo.state !== STAT_IN_PRE_PROP_NAME) {
+                return result;
+            }
+            let widgetInfo = getWidgetInfo(tagInfo.name);
+            while (widgetInfo) {
+                result = result.concat(completionsFromArray(widgetInfo.props));
+                if (widgetInfo.parent) {
+                    widgetInfo = getWidgetInfo(widgetInfo.parent);
+                }
+                else {
+                    break;
+                }
+            }
         }
-        if (widgetInfo) {
-            widgetInfo.props.forEach((iter) => {
-                let item = new vscode.CompletionItem(iter.name, vscode.CompletionItemKind.Keyword);
-                item.detail = iter.desc;
-                item.documentation = iter.desc;
-                result.push(item);
-            });
+        else if (isAwtkStyleFile(document)) {
+            result = result.concat(completionsFromArray(awtkStyle.styleIDs));
         }
-        widgetInfo = getWidgetInfo(tagInfo.name);
-        if (widgetInfo) {
-            widgetInfo.props.forEach((iter) => {
-                let item = new vscode.CompletionItem(iter.name, vscode.CompletionItemKind.Keyword);
-                item.detail = iter.desc;
-                item.documentation = iter.desc;
-                result.push(item);
-            });
-        }
+        result = result.filter(iter => {
+            let found = tagInfo.props[iter.label];
+            return !found;
+        });
         return result;
     }
 };
@@ -200,6 +227,7 @@ exports.widgetPropValuesCompletionProvider = {
                             return new vscode.CompletionItem(iter, vscode.CompletionItemKind.Keyword);
                         });
                     }
+                    /*TODO*/
                 }
             }
         }
