@@ -28,11 +28,11 @@ AWTK XML UI 预览插件：在 vscode 中实时预览 AWTK XML UI 文件。主�
 
  ![](docs/images/widget_completion.png)
 
-* 输入空格时提示改控件的属性名。
+* 输入空格时提示当前控件的属性名列表。
 
 ![](docs/images/prop_name_completion.png)
 
-* 输入引号时提示改控件的取值 (TODO)。
+* 输入引号时提示当前控件当前属性的取值列表 (TODO)。
  
  ![](docs/images/prop_value_completion.png)
 

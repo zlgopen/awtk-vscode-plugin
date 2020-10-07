@@ -163,7 +163,7 @@ function parseTag(tagText: string | null): any {
 
 > 这里解析出的上下文信息，对于 AWTK UI XML 的补全是够用了的。
 >
-> 对于 AWTK Style XML 还不够，因为 Style 里面的 tag 是上下文相关的。它需要解析整个文档，才能提供最理想的补全数据。出了性能和复杂度考虑，最好选择实现一个折中的方案，不过其效果还是不错的。
+> 对于 AWTK Style XML 还不够，因为 Style 里面的 tag 是上下文相关的。它需要解析整个文档，才能提供最理想的补全数据。出了性能和复杂度考虑，最后选择实现一个折中的方案，不过其效果还是不错的。
 
 ### 2.3 tag 补全
 
@@ -248,4 +248,8 @@ export const widgetPropsCompletionProvider = {
 
 这个插件是一个典型的数据驱动的插件，插件的数据主要源于 AWTK 的 idl.json 文件， idl.json 是通过工具从 AWTK 的头文件中提取出来的，包含全部 API 以及控件的描述。
 
-用 nodejs 写一个脚本提取需要的数据即可。该工具位于：awtk/tools/completion_gen
+用 nodejs 写了一个脚本提取需要的数据（该工具位于：awtk/tools/completion_gen):
+
+* awtk_ui.json UI XML 的数据
+
+* awtk_style.json Style XML 的数据
