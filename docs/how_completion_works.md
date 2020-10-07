@@ -1,4 +1,4 @@
-# AWTK IntelliSense 插件 (vscode) 工作原理
+# vscode 版本的 AWTK IntelliSense 插件工作原理
 
 ## 1. 背景
 
@@ -247,3 +247,5 @@ export const widgetPropsCompletionProvider = {
 ## 3. 插件的数据
 
 这个插件是一个典型的数据驱动的插件，插件的数据主要源于 AWTK 的 idl.json 文件， idl.json 是通过工具从 AWTK 的头文件中提取出来的，包含全部 API 以及控件的描述。
+
+用 nodejs 写一个脚本提取需要的数据即可。该工具位于：awtk/tools/completion_gen
