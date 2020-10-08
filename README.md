@@ -36,13 +36,39 @@ AWTK XML UI 预览插件：在 vscode 中实时预览 AWTK XML UI 文件。主�
  
  ![](docs/images/prop_value_completion.png)
 
-## 2. 运行
+## 2. 编译插件
 
-### 2.1 运行服务
+### 2.1 安装 vsce
+
+```
+npm install -g vsce
+```
+
+### 2.2 编译
+
+```
+vsce package
+```
+
+> 生成文件 awtk-preview-completion-0.0.1.vsix，用 vscode 安装该文件即可。
+
+![](docs/images/vscode_install_vsix.png)
+
+## 3. 运行
+
+### 3.1 运行服务
 
 编译和运行 preview 服务，请参考 [awtk-previewer](https://github.com/zlgopen/awtk-previewer)
 
-### 2.2 运行插件
+### 3.2 激活插件
+
+* 通过 shift+ctrl+p 激活命令控制台
+
+* 运行 `AWTK : Preview UI XML`
+
+![](docs/images/activate_plugin.png)
+
+### 3.2 调试运行
 
 - Open this example in VS Code 1.47+
 - `npm install`
