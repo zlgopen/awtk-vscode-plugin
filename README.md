@@ -44,6 +44,20 @@ AWTK XML UI 预览插件：在 vscode 中实时预览 AWTK XML UI 文件。主�
 npm install -g vsce
 ```
 
+### 2.1 安装 typescript
+
+```
+npm install -g typescript
+```
+
+### 2.1 安装 types/vscode@1.47.0
+
+在awtk-vscode-plugin目录下打开终端，执行以下命令：
+
+```
+npm install @types/vscode@1.47.0
+```
+
 ### 2.2 编译
 
 ```
