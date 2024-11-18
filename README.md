@@ -18,7 +18,6 @@ AWTK XML UI 预览插件：在 vscode 中实时预览 AWTK XML UI 文件。主�
 * 主题切换暂未实现。
 * 暂不支持自定义控件。
 * 不支持 include 指令。
-* 目前大概 3 秒更新一次（后续再优化）。
 
 ### 1.2 自动补全插件
 
@@ -94,3 +93,8 @@ In the new vscode instance:
 * Press shortcut shift+ctrl+p to activable command console
 
 * Run the `AWTK : Preview UI XML` to create the webview.
+
+## 4. 常见问题
+
+[Windows 下如何查看 previewer 使用的 8000 端口是否被占用](https://github.com/zlgopen/awtk-vscode-plugin/wiki/Windows-%E4%B8%8B%E5%A6%82%E4%BD%95%E6%9F%A5%E7%9C%8B-previewer-%E4%BD%BF%E7%94%A8%E7%9A%84-8000-%E7%AB%AF%E5%8F%A3%E6%98%AF%E5%90%A6%E8%A2%AB%E5%8D%A0%E7%94%A8)
+[端口冲突如何处理](https://github.com/zlgopen/awtk-vscode-plugin/wiki/Previewer-%E7%9A%84%E7%AB%AF%E5%8F%A3%E5%86%B2%E7%AA%81%E5%A6%82%E4%BD%95%E5%A4%84%E7%90%86%EF%BC%9F)
